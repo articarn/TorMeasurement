@@ -1,8 +1,10 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[27]:
-import numpy
+# In[17]:
+
+
+import numpy as np
 import matplotlib.pyplot as plt
 
 chrome_100=[16.382361888885498, 11.331283807754517, 13.347985982894897, 10.653717041015625, 11.157796144485474, 20.079227209091187, 13.963016271591187, 12.541457891464233, 10.571033000946045, 10.904627799987793]
@@ -15,17 +17,21 @@ vpn_100=[13.284361839294434, 14.710711002349854, 14.115035772323608, 14.30907630
 vpn_1=[125.81482887268066, 113.42315173149109, 124.88232398033142, 153.28872799873352, 130.41537618637085, 126.64594793319702, 134.54498386383057, 143.65814089775085, 146.2625708580017, 133.99819421768188]
 
 f1 = plt.figure(1)
-plt.title("Chrome/Tor Download Speed Histogram, 100MB")
-plt.hist(np.sort(chrome_100), alpha=0.5, label='Chrome', color='orange')
-plt.hist(np.sort(tor_100), alpha=0.5, label='Tor', color='purple')
+plt.title("Chrome/Tor/Germany VPN Download Speed Histogram, 100MB")
+plt.hist(np.sort(chrome_100), alpha=0.5, label='Chrome', color='red')
+plt.hist(np.sort(tor_100), alpha=0.5, label='Tor', color='orange')
+plt.hist(np.sort(vpn_100), alpha=0.5, label='VPN', color='blue')
+
 plt.legend()
 plt.xlabel("Time (s)")
 f1.show()
 
 f2 = plt.figure(2)
-plt.title("Chrome/Tor Download Speed Histogram, 1GB")
-plt.hist(np.sort(chrome_1), alpha=0.5, label='Chrome', color='orange')
-plt.hist(np.sort(tor_1), alpha=0.5, label='Tor', color='purple')
+plt.title("Chrome/Tor/Germany VPN Download Speed Histogram, 1GB")
+plt.hist(np.sort(chrome_1), alpha=0.5, label='Chrome', color='red')
+plt.hist(np.sort(tor_1), alpha=0.5, label='Tor', color='orange')
+plt.hist(np.sort(vpn_1), alpha=0.5, label='VPN', color='blue')
+
 plt.legend()
 plt.xlabel("Time (s)")
 f2.show()
@@ -39,47 +45,121 @@ plt.xlabel("Time (s)")
 f3.show()
 
 f4 = plt.figure(4)
-plt.title("Germany VPN/Tor Download Speed Histogram, 1GB")
+plt.title("Germany VPN/Tor Download Time Histogram, 1GB")
 plt.hist(np.sort(vpn_1), alpha=0.5, label='VPN', color='orange')
 plt.hist(np.sort(tor_1), alpha=0.5, label='Tor', color='purple')
 plt.legend()
 plt.xlabel("Time (s)")
 f4.show()
 
-print("TOR 100MB percentile:",numpy.percentile(tor_100, 95))
-print("TOR 100MB mean:", numpy.mean(tor_100))
-print("TOR 100MB median:", numpy.median(tor_100))
+print("TOR 100MB percentile:",np.percentile(tor_100, 95))
+print("TOR 100MB mean:", np.mean(tor_100))
+print("TOR 100MB median:", np.median(tor_100))
 
-print("TOR 1GB percentile:",numpy.percentile(tor_1, 95))
-print("TOR 1GB mean:", numpy.mean(tor_1))
-print("TOR 1GB median:", numpy.median(tor_1))
+print("TOR 1GB percentile:",np.percentile(tor_1, 95))
+print("TOR 1GB mean:", np.mean(tor_1))
+print("TOR 1GB median:", np.median(tor_1))
 
-print("VPN 100MB percentile:",numpy.percentile(vpn_100, 95))
-print("VPN 100MB mean:", numpy.mean(vpn_100))
-print("VPN 100MB median:", numpy.median(vpn_100))
+print("VPN 100MB percentile:",np.percentile(vpn_100, 95))
+print("VPN 100MB mean:", np.mean(vpn_100))
+print("VPN 100MB median:", np.median(vpn_100))
 
-print("VPN 1GB percentile:",numpy.percentile(vpn_1, 95))
-print("VPN 1GB mean:", numpy.mean(vpn_1))
-print("VPN 1GB median:", numpy.median(vpn_1))
+print("VPN 1GB percentile:",np.percentile(vpn_1, 95))
+print("VPN 1GB mean:", np.mean(vpn_1))
+print("VPN 1GB median:", np.median(vpn_1))
 
-print("Chrome 100MB percentile:",numpy.percentile(chrome_100, 95))
-print("Chrome 100MB mean:", numpy.mean(chrome_100))
-print("Chrome 100MB median:", numpy.median(chrome_100))
+print("Chrome 100MB percentile:",np.percentile(chrome_100, 95))
+print("Chrome 100MB mean:", np.mean(chrome_100))
+print("Chrome 100MB median:", np.median(chrome_100))
 
-print("Chrome 1GB percentile:",numpy.percentile(chrome_1, 95))
-print("Chrome 1GB mean:", numpy.mean(chrome_1))
-print("Chrome 1GB median:", numpy.median(chrome_1))
-
-
+print("Chrome 1GB percentile:",np.percentile(chrome_1, 95))
+print("Chrome 1GB mean:", np.mean(chrome_1))
+print("Chrome 1GB median:", np.median(chrome_1))
 
 
+# In[14]:
+
+
+t_chrome_1 = calculate_throughputs_1(chrome_1)
+t_tor_1 = calculate_throughputs_1(tor_1)
+t_vpn_1 = calculate_throughputs_1(vpn_1)
+
+f5 = plt.figure(5)
+plt.title("Germany VPN/Tor/Chrome Througput Histogram, 1GB")
+plt.hist(np.sort(t_vpn_1), alpha=0.5, label='VPN', color='red')
+plt.hist(np.sort(t_tor_1), alpha=0.5, label='Tor', color='orange')
+plt.hist(np.sort(t_chrome_1), alpha=0.5, label='Chrome', color='blue')
+
+plt.legend()
+plt.xlabel("MBps")
+f5.show()
+
+
+t_chrome_100 = calculate_throughputs_100(chrome_100)
+t_tor_100 = calculate_throughputs_100(tor_100)
+t_vpn_100 = calculate_throughputs_100(vpn_100)
+
+f6 = plt.figure(6)
+plt.title("Germany VPN/Tor/Chrome Througput Histogram, 100MB")
+plt.hist(np.sort(t_vpn_100), alpha=0.5, label='VPN', color='red')
+plt.hist(np.sort(t_tor_100), alpha=0.5, label='Tor', color='orange')
+plt.hist(np.sort(t_chrome_100), alpha=0.5, label='Chrome', color='blue')
+
+plt.legend()
+plt.xlabel("MBps")
+f6.show()
 
 
 
 
+# In[18]:
 
 
-# In[15]:
+
+print("TOR 100MB percentile:",np.percentile(t_tor_100, 95))
+print("TOR 100MB mean:", np.mean(t_tor_100))
+print("TOR 100MB median:", np.median(t_tor_100))
+
+print("TOR 1GB percentile:",np.percentile(t_tor_1, 95))
+print("TOR 1GB mean:", np.mean(t_tor_1))
+print("TOR 1GB median:", np.median(t_tor_1))
+
+print("VPN 100MB percentile:",np.percentile(t_vpn_100, 95))
+print("VPN 100MB mean:", np.mean(t_vpn_100))
+print("VPN 100MB median:", np.median(t_vpn_100))
+
+print("VPN 1GB percentile:",np.percentile(t_vpn_1, 95))
+print("VPN 1GB mean:", np.mean(t_vpn_1))
+print("VPN 1GB median:", np.median(t_vpn_1))
+
+print("Chrome 100MB percentile:",np.percentile(t_chrome_100, 95))
+print("Chrome 100MB mean:", np.mean(t_chrome_100))
+print("Chrome 100MB median:", np.median(t_chrome_100))
+
+print("Chrome 1GB percentile:",np.percentile(t_chrome_1, 95))
+print("Chrome 1GB mean:", np.mean(t_chrome_1))
+print("Chrome 1GB median:", np.median(t_chrome_1))
+
+
+# In[19]:
+
+
+def calculate_throughputs_1(time_seconds):
+    file_size_bits = 8 * 1_000_000_000 # 1GB 
+    throughputs = [file_size_bits / (time * 1_000_000) for time in time_seconds]
+    return throughputs
+
+
+# In[20]:
+
+
+def calculate_throughputs_100(time_seconds):
+    file_size_bits = 100 * 8 * 1_000_000  # 100 MB
+    throughputs = [file_size_bits / (time * 1_000_000) for time in time_seconds]
+    return throughputs
+
+
+# In[21]:
 
 
 import time
@@ -94,7 +174,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
-# Constants
 NUM_SAMPLES = 10
 NUM_FILES = 2
 RETRY_COUNT = 3
@@ -105,16 +184,11 @@ Metrics = namedtuple('Metrics', 'file_name, file_size, avg_download_speed, downl
 
 def hetzner_speed_test():
     driver = chrome_setup()
-
-    # Navigate to the speed test website
     url = "https://ash-speed.hetzner.com/"
     driver.get(url)
 
-    # Extract download links
     download_elements = driver.find_elements(By.CSS_SELECTOR, "a")
     download_links = [elem.get_attribute('href') for elem in download_elements if elem.get_attribute('href').endswith(".bin")]
-
-    # Limit to NUM_FILES
     download_links = download_links[:NUM_FILES]
 
     metrics_list = []
@@ -137,17 +211,14 @@ def hetzner_speed_test():
                         response = session.get(link, stream=True, timeout=30)  
                         total_size = int(response.headers.get('content-length', 0))
 
-                        # Download and measure time
                         with open(f"temp_{file_name}", 'wb') as temp_file:
                             for chunk in response.iter_content(chunk_size=1024):
                                 temp_file.write(chunk)
                         end_time = time.time()
 
-                        # Calculate elapsed time
                         elapsed_time = end_time - start_time
                         download_times.append(elapsed_time)
 
-                        # Clean up temporary file
                         os.remove(f"temp_{file_name}")
                         success = True
                         break
@@ -170,7 +241,6 @@ def hetzner_speed_test():
     teardown(driver)
 
 def write_data_to_file(name, metrics_list):
-    # Save metrics and download times to CSV
     with open(f"{name}_HVPNresults.csv", "w", newline='') as f:
         writer = csv.writer(f)
         writer.writerow(["File Name", "File Size (MB)", "Avg Download Speed (MB/s)", "Download Times (s)"])
@@ -178,21 +248,6 @@ def write_data_to_file(name, metrics_list):
             writer.writerow([metrics.file_name, metrics.file_size, metrics.avg_download_speed, metrics.download_times])
     print(f"Results saved to {name}_HVPNresults.csv")
 
-def plot_throughput_histogram(metrics_list):
-    all_throughputs = []
-    for metrics in metrics_list:
-        for time in metrics.download_times:
-            if time > 0:  # Avoid division by zero
-                throughput = metrics.file_size / time  # Throughput in MB/s
-                all_throughputs.append(throughput)
-
-    plt.figure(figsize=(10, 6))
-    plt.hist(all_throughputs, bins=10, edgecolor='black')
-    plt.title("Histogram of Throughput (MB/s)")
-    plt.xlabel("Throughput (MB/s)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
-    plt.show()
 
 def chrome_setup():
     options = Options()
@@ -206,11 +261,8 @@ def chrome_setup():
 def teardown(driver):
     driver.quit()
 
-if __name__ == "__main__":
-    hetzner_speed_test()
 
-
-# In[14]:
+# In[22]:
 
 
 import time
@@ -236,11 +288,9 @@ Metrics = namedtuple('Metrics', 'file_name, file_size, avg_download_speed, downl
 def hetzner_speed_test_tor():
     driver = tor_setup()
 
-    # Navigate to the speed test website
     url = "https://ash-speed.hetzner.com/"
     driver.get(url)
 
-    # Extract download links
     download_elements = driver.find_elements(By.CSS_SELECTOR, "a")
     download_links = [elem.get_attribute('href') for elem in download_elements if elem.get_attribute('href').endswith(".bin")]
     download_links = download_links[:NUM_FILES]
@@ -307,19 +357,6 @@ def write_data_to_file(name, metrics_list):
             writer.writerow([metrics.file_name, metrics.file_size, metrics.avg_download_speed, metrics.download_times])
     print(f"Results saved to {name}.csv")
 
-def plot_throughput_histogram(metrics_list):
-    throughputs = [
-        metrics.file_size / time for metrics in metrics_list for time in metrics.download_times if time > 0
-    ]
-
-    plt.figure(figsize=(10, 6))
-    plt.hist(throughputs, bins=10, edgecolor='black')
-    plt.title("Histogram of Throughput (MB/s) - Tor")
-    plt.xlabel("Throughput (MB/s)")
-    plt.ylabel("Frequency")
-    plt.grid(True)
-    plt.show()
-
 def tor_setup():
     tor_binary_path_driver = '/Applications/Tor Browser.app/Contents/MacOS/firefox'
     geckodriver_path = 'drivers/geckodriver'
@@ -343,6 +380,9 @@ def tor_setup():
 def teardown(driver):
     driver.quit()
 
-if __name__ == "__main__":
-    hetzner_speed_test_tor()
+
+# In[ ]:
+
+
+
 
